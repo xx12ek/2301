@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<title>2301班 · 2026届全国蹭饭地图</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+body{
+
+    overflow:hidden;
+    background:#f5f7fa;
+    font-family:"Microsoft YaHei",sans-serif;
+
+}
+
+
+#main{
+
+    width:100vw;
+    height:100vh;
+
+}
+
+
+
+/*标题*/
+
+.title{
+
+    position:absolute;
+
+    top:12px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:rgba(255,255,255,.96);
+
+    padding:12px 30px;
+
+    border-radius:35px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.1);
+
+    font-size:26px;
+
+    font-weight:bold;
+
+    color:#2c3e50;
+
+    z-index:999;
+
+}
+
+
+
+/*统计信息*/
+
+.info{
+
+    position:absolute;
+
+    left:15px;
+
+    bottom:15px;
+
+    background:rgba(255,255,255,.95);
+
+    padding:15px 22px;
+
+    border-radius:20px;
+
+    line-height:1.8;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.1);
+
+    color:#2c3e50;
+
+    z-index:999;
+
+}
+
+
+
+/*毕业寄语*/
+
+.footer{
+
+    position:absolute;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#5f6b7a;
+
+    font-size:15px;
+
+    background:rgba(255,255,255,.88);
+
+    padding:8px 20px;
+
+    border-radius:30px;
+
+    z-index:999;
+
+}
+
+
+
+/*手机端适配*/
+
+@media(max-width:768px){
+
+.title{
+
+    width:92%;
+
+    font-size:18px;
+
+    text-align:center;
+
+    padding:10px;
+
+}
+
+
+.info{
+
+    font-size:12px;
+
+    padding:12px;
+
+}
+
+
+.footer{
+
+    width:90%;
+
+    font-size:11px;
+
+    text-align:center;
+
+}
+
+
+}
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="title">
+
+2301班 · 2026届全国蹭饭地图
+
+</div>
+
+
+
+
+<div class="info">
+
+62名同学<br>
+
+28座城市<br>
+
+覆盖18个省（自治区、直辖市）<br>
+
+点击城市查看详细信息
+
+</div>
+
+
+
+
+<div class="footer">
+
+愿我们前程似锦，山水有相逢。
+
+</div>
+
+
+
+
+<div id="main"></div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js"></script>
+
+<script src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+
+
+
+
+<script>
+
+
+/*======================
+    城市数据
+======================*/
+
+
+var cities=[{name:"北京",
+value:[116.46,39.92,5],
+students:"申雅妮 北京邮电大学（计算机类）<br>\
+蒋宝锋 北京邮电大学（计算机类）<br>\
+涂文鹏 北京交通大学（电子信息类）<br>\
+赵林曦 华北电力大学（北京）（机械工程）<br>\
+谭鹏霞 中国地质大学（北京）（地质学类）"},
+
+{name:"南京",
+value:[118.78,32.04,5],
+students:"苏育锋 东南大学（工科试验班）<br>\
+文莫一凡 南京农业大学（农学）<br>\
+张津铭 南京信息工程大学（应用气象学）<br>\
+黄晓莹 南京农业大学（动物医学类）<br>\
+蒋米琪 南京工业大学（信息管理与信息系统）"},
+
+{name:"武汉",
+value:[114.31,30.52,6],
+students:"全宣宇 武汉大学（微电子科学与工程）<br>\
+邓景仁 武汉理工大学（能源与动力工程）<br>\
+彭柳蓉 武汉理工大学（材料类）<br>\
+严欢欢 武汉理工大学（信息管理与信息系统）<br>\
+王茗萱 中南财经政法大学（经济学）<br>\
+何心怡 中南民族大学（数据科学）"},
+
+{name:"南宁",
+value:[108.33,22.84,6],
+students:"黄新凯 广西大学（自动化）<br>\
+秦子媛 广西大学（计算机科学与技术）<br>\
+涂家骏 广西大学（自动化）<br>\
+黄思怡 广西大学（车辆工程）<br>\
+李丽洁 南宁师范大学（化学）<br>\
+文玉德 广西中医药大学（中医学）"},
+
+{name:"桂林",
+value:[110.28,25.29,5],
+students:"廖雪锋 桂林电子科技大学（电子信息工程）<br>\
+阳宗晋 桂林电子科技大学（电子信息工程）<br>\
+廖杰平 桂林电子科技大学（电气工程及其自动化）<br>\
+赵能波 桂林电子科技大学（通信工程）<br>\
+陈慧婷 广西师范大学（电子信息工程）"},
+
+{name:"成都",
+value:[104.06,30.67,3],
+students:"黄宏辉 西南交通大学（通信工程）<br>\
+曾文涛 西南交通大学（材料类）<br>\
+李昱俊 成都大学（电气工程及其自动化）"},
+
+{name:"珠海",
+value:[113.52,22.30,2],
+students:"韦叶婷 北京师范大学（珠海）（数学类）<br>\
+阳欣梦 北京师范大学（珠海）（地理科学）"},
+
+{name:"重庆",
+value:[106.54,29.59,2],
+students:"易诗柔 重庆大学（安全工程）<br>\
+蒋健豪 重庆交通大学（交通运输）"},
+
+{name:"天津",
+value:[117.20,39.13,2],
+students:"陈秦予涵 河北工业大学（电气工程及其自动化）<br>\
+唐坤 天津理工大学（电子信息工程）"},
+
+{name:"合肥",
+value:[117.27,31.86,2],
+students:"彭洋 合肥工业大学（高分子材料与工程）<br>\
+唐睿阳 陆军兵种大学（车辆工程）"},
+
+{name:"福州",
+value:[119.30,26.08,2],
+students:"秦翰杰 福州大学（集成电路设计与集成系统）<br>\
+周毅轩 福州大学（水利水电工程）"},
+
+{name:"哈尔滨",
+value:[126.63,45.75,2],
+students:"苏靖嘉 哈尔滨工程大学（新能源材料与器件）<br>\
+李天姿 东北林业大学（工程管理）"},
+
+{name:"宣城",
+value:[118.73,30.95,2],
+students:"许灵赐 合肥工业大学宣城校区（智能科学与技术）<br>\
+唐尔婧 合肥工业大学宣城校区（环境工程）"},
+
+{name:"昆明",
+value:[102.73,25.04,2],
+students:"赵承菊 云南大学（生物育种科学）<br>\
+李敏欣 昆明理工大学（新能源材料与器件）"},
+
+{name:"太原",
+value:[112.53,37.87,2],
+students:"杨尚武 太原理工大学（工程力学）<br>\
+谭琪森 太原科技大学（自动化）"},
+
+{name:"杭州",
+value:[120.19,30.26,2],
+students:"兰薇子俊 浙江理工大学（能源与动力工程）<br>\
+李经倩 中国计量大学（光电信息科学与工程）"},{name:"威海",
+value:[122.12,37.51,1],
+students:"全永灿 哈尔滨工业大学（威海）（工科试验班·未来信息）"},
+
+{name:"广州",
+value:[113.23,23.16,1],
+students:"莫子函 华南理工大学（金融科技）"},
+
+{name:"长沙",
+value:[112.94,28.23,1],
+students:"谢尹婷 中南大学（材料类）"},
+
+{name:"无锡",
+value:[120.29,31.59,1],
+students:"李雨菲 南京理工大学（网络空间安全）"},
+
+{name:"秦皇岛",
+value:[119.57,39.95,1],
+students:"黎纹君 东北大学秦皇岛校区（物联网工程）"},
+
+{name:"徐州",
+value:[117.20,34.26,1],
+students:"李泽婷 中国矿业大学（过程装备与控制工程）"},
+
+{name:"西安",
+value:[108.95,34.27,1],
+students:"曾韶昌 西北大学（化工与制药类）"},
+
+{name:"郑州",
+value:[113.65,34.76,1],
+students:"黄诗婷 郑州大学（水利类）"},
+
+{name:"厦门",
+value:[118.10,24.46,1],
+students:"蒋淑祯 集美大学（软件工程）"},
+
+{name:"保定",
+value:[115.48,38.87,1],
+students:"阳勇睿 河北大学（测控技术与仪器）"},
+
+{name:"舟山",
+value:[122.10,30.00,1],
+students:"陈壹言 浙江海洋大学（航海技术）"},
+
+{name:"乌鲁木齐",
+value:[87.68,43.77,1],
+students:"莫博纤 新疆医科大学（临床医学）"}
+];
+
+
+
+
+/*======================
+      初始化地图
+======================*/
+
+
+var chart=echarts.init(
+document.getElementById("main")
+);
+
+
+
+
+var option={
+
+
+
+tooltip:{
+
+    trigger:"item",
+
+    formatter:function(p){
+
+
+        if(p.seriesType==="scatter"){
+
+            return "<b style='font-size:18px'>"
+
+            +p.name+
+
+            "</b><br><br>"
+
+            +p.data.students;
+
+        }
+
+
+        return p.name;
+
+    },
+
+
+    padding:18,
+
+
+    backgroundColor:
+    "rgba(255,255,255,.98)",
+
+
+    borderWidth:1,
+
+
+    borderColor:"#3498db",
+
+
+    textStyle:{
+
+        color:"#333",
+
+        fontSize:15
+
+    }
+
+
+},
+
+
+
+
+
+geo:{
+
+    map:"china",
+
+
+    roam:true,
+
+
+    zoom:1.25,
+
+
+    scaleLimit:{
+
+        min:1,
+
+        max:8
+
+    },
+
+
+    label:{
+
+        show:false
+
+    },
+
+
+    itemStyle:{
+
+        areaColor:"#eef5fb",
+
+        borderColor:"#8ab4d8",
+
+        borderWidth:1
+
+    },
+
+
+    emphasis:{
+
+        itemStyle:{
+
+            areaColor:"#d9ecfd"
+
+        }
+
+    }
+
+},
+
+
+
+
+series:[{
+
+
+    type:"scatter",
+
+
+    coordinateSystem:"geo",
+
+
+    data:cities,
+
+
+
+    symbolSize:function(val){
+
+        return Math.sqrt(val[2])*8+18;
+
+    },
+
+
+
+    itemStyle:{
+
+        color:"#e74c3c",
+
+
+        shadowBlur:15,
+
+
+        shadowColor:
+        "rgba(0,0,0,.35)"
+
+    },
+
+
+
+    label:{
+
+
+        show:true,
+
+
+        position:"bottom",
+
+
+        distance:5,
+
+
+        formatter:function(p){
+
+            return p.name+
+
+            "（"+
+
+            p.data.value[2]+
+
+            "人）";
+
+        },
+
+
+        fontSize:10,
+
+
+        color:"#2c3e50",
+
+
+        backgroundColor:
+        "rgba(255,255,255,.88)",
+
+
+        padding:[3,5],
+
+
+        borderRadius:6,
+
+
+        textBorderWidth:2,
+
+
+        textBorderColor:"#fff"
+
+    },
+
+
+
+    emphasis:{
+
+        scale:true,
+
+
+        itemStyle:{
+
+            color:"#ff6347"
+
+        },
+
+
+        label:{
+
+            show:true,
+
+            fontSize:12
+
+        }
+
+    }
+
+
+
+}]
+
+};
+
+
+
+chart.setOption(option);
+
+
+
+/*自适应*/
+
+window.addEventListener(
+
+"resize",
+
+function(){
+
+    chart.resize();
+
+}
+
+);
+
+
+
+/*手机点击查看详情*/
+
+chart.on(
+
+"click",
+
+function(params){
+
+
+if(params.data){
+
+alert(
+
+params.name+
+
+"\n\n"+
+
+params.data.students
+
+.replace(/<br>/g,"\n")
+
+);
+
+}
+
+
+}
+
+);
+
+
+
+</script>
+
+
+</body>
+
+</html>
